@@ -19,12 +19,12 @@ def create_data_model():
                             (37.69538, -122.15049),  # localtion 10 - the depot
                             (37.72939, -122.22708),  # localtion 11 - the depot
                             (37.85068, -122.22838)]  # localtion 12 - the depot
-    
+
     # Converting float data (location_coordinates) to integer for measuring distance in "m"
     location_coordinates = [(10000 * coord[0], 10000 * coord[1]) for coord in location_coordinates]
     location_coordinates = [(round(coord[0]), round(coord[1])) for coord in location_coordinates]
-    
-    
+
+
     data = {}
 
 
@@ -34,10 +34,10 @@ def create_data_model():
         row = []
         for j in range(len(location_coordinates)):
             distance = int(round(math.sqrt((location_coordinates[i][0]-location_coordinates[j][0])**2
-            + (location_coordinates[i][1]-location_coordinates[j][1])**2), 2))
+                                       + (location_coordinates[i][1]-location_coordinates[j][1])**2), 0))
             row.append(distance)
         distances.append(row)
-    
+
     data['distance_matrix'] = distances
 
     data['pickups_deliveries'] = [[12, 1],
@@ -51,8 +51,8 @@ def create_data_model():
     data['depot'] = 0
 
     return data
-    
-    def print_solution(data, manager, routing, solution):
+
+def print_solution(data, manager, routing, solution):
     """Print solution on console."""
     print(f'Objective: {solution.ObjectiveValue()}')
     total_distance = 0
@@ -70,9 +70,9 @@ def create_data_model():
         print(plan_output)
         total_distance += route_distance
     print('Total Distance of all routes: {}m'.format(total_distance))
-    
-    
-    def main():
+
+
+def main():
     """Entry point of the program."""
     # Instantiate the data problem.
     data = create_data_model()
@@ -85,7 +85,7 @@ def create_data_model():
 
     # Define cost of each arc.
     def distance_callback(from_index, to_index):
-        """Return the manahattan distance between the two nodes."""
+        """Return the manhattan distance between the two nodes."""
         # Convert from routing variable Index to distance matrix NodeIndex.
         from_node = manager.IndexToNode(from_index)
         to_node = manager.IndexToNode(to_index)
@@ -117,7 +117,7 @@ def create_data_model():
         routing.solver().Add(
             distance_dimension.CumulVar(pickup_index) <= distance_dimension.CumulVar(delivery_index)
         )
-    
+
     # Setting first solution heuristic.
     search_parameters = pywrapcp.DefaultRoutingSearchParameters()
     search_parameters.first_solution_strategy = (
@@ -131,5 +131,5 @@ def create_data_model():
     if solution:
         print_solution(data, manager, routing, solution)
 
-# execuate the main function and get the results
+# execute the main function and get the results
 main()
