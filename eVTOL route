@@ -1,5 +1,5 @@
 !pip install numpy pandas ortools
-###
+
 from ortools.constraint_solver import routing_enums_pb2
 from ortools.constraint_solver import pywrapcp
 import math
@@ -33,7 +33,8 @@ def create_data_model():
     for i in range(len(location_coordinates)):
         row = []
         for j in range(len(location_coordinates)):
-            distance = round(math.sqrt((location_coordinates[i][0]-location_coordinates[j][0])**2 + (location_coordinates[i][1]-location_coordinates[j][1])**2), 2)
+            distance = int(round(math.sqrt((location_coordinates[i][0]-location_coordinates[j][0])**2
+            + (location_coordinates[i][1]-location_coordinates[j][1])**2), 2))
             row.append(distance)
         distances.append(row)
     
